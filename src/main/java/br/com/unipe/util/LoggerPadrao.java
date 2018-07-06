@@ -4,6 +4,8 @@ package br.com.unipe.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.sentry.Sentry;
+
 public class LoggerPadrao {
 	
 	private static Logger logErro = LoggerFactory.getLogger("erros");
@@ -11,12 +13,19 @@ public class LoggerPadrao {
 	private static Logger logInfoStartApplication = LoggerFactory.getLogger("start_application");
 	private static Logger logDebug = LoggerFactory.getLogger("depuracao");
 	private static Logger logTransacao = LoggerFactory.getLogger("transacao");
+	
 
 	public static void info(String mensagem, Object ... args){
 		logInfo.info(mensagem, args);
 	}
 	
+	static{
+		Sentry.init();
+		Sentry.init("https://8da1c4631e6b44d8abb00bb8d17a49bf@sentry.io/1238324");
+	}
+	
 	public static void info(String mensagem){
+		Sentry.capture(mensagem);
 		logInfo.info(mensagem);
 	}
 	
