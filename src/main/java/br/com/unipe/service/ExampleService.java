@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import br.com.unipe.domain.Example;
+import br.com.unipe.util.LoggerPadrao;
 
 @Service
 public class ExampleService {
@@ -15,11 +16,16 @@ public class ExampleService {
 	public Example cadastrar(Example example) throws Exception {
 		
 		if(!containsName(example.getNome())) {
+			
 			lista.add(example);
+			LoggerPadrao.info("Cadastrando: "+example.getNome());
 			return example;
 		}
 		
+		LoggerPadrao.error("Example com nome " + example.getNome() + " já existe");
 		throw new Exception("Example com nome " + example.getNome() + " já existe");
+		
+		
 	}
 	
 	private boolean containsName(String name){
@@ -33,6 +39,7 @@ public class ExampleService {
 	public Example pesquisar(String nome) {
 		for (Example example : lista) {
 			if(nome.equals(example.getNome())) {
+				LoggerPadrao.info("Pesquisando por: "+nome);
 				return example;
 			}
 		}
@@ -46,10 +53,12 @@ public class ExampleService {
 			if(nome.equals(lista.get(i).getNome())) {
 				lista.remove(i);
 				del = true;
+				LoggerPadrao.info("Removendo: "+nome);
 			}
 		}
 		
 		if(!del) {
+			LoggerPadrao.error("Não existe Example com nome " + nome);
 			throw new Exception("Não existe Example com nome " + nome);
 		}
 	}

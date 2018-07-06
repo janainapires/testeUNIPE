@@ -4,6 +4,10 @@ package br.com.hermes.hermeswp.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.sentry.Sentry;
+import io.sentry.SentryClient;
+import io.sentry.SentryClientFactory;
+
 public class LoggerPadrao {
 	
 	private static Logger logErro = LoggerFactory.getLogger("erros");
@@ -11,12 +15,21 @@ public class LoggerPadrao {
 	private static Logger logInfoStartApplication = LoggerFactory.getLogger("start_application");
 	private static Logger logDebug = LoggerFactory.getLogger("depuracao");
 	private static Logger logTransacao = LoggerFactory.getLogger("transacao");
+	
+	private static SentryClient sentry;
 
 	public static void info(String mensagem, Object ... args){
 		logInfo.info(mensagem, args);
 	}
 	
+	static{
+        // You can also manually provide the DSN to the ``init`` method.
+        Sentry.init("https://8da1c4631e6b44d8abb00bb8d17a49bf@sentry.io/1238324");
+        sentry = SentryClientFactory.sentryClient();
+	}
+	
 	public static void info(String mensagem){
+		sentry.sendMessage(mensagem);
 		logInfo.info(mensagem);
 	}
 	
